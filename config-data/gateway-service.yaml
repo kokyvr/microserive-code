@@ -19,7 +19,7 @@ spring:
          - id: user-service
            url: lb://user-service
            predicates:
-              - Path=/user/**
+             - Path=/user/**
          - id: car-service
            url: lb://car-service
            predicates:
