@@ -3,9 +3,14 @@ package com.user.userservice.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,13 +49,20 @@ public class UserService {
 		return userNew;
 	}
 	public List<Car> getCars(int userId){
-		List<Car> cars = resTemplate.getForObject("http://car-service/car/byuser/"+userId,List.class);
-		return cars;
+		Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer" + jwt.getTokenValue());
+		ResponseEntity<List> cars = resTemplate.exchange("http://car-service/car/byuser/"+userId,HttpMethod.GET,new HttpEntity<>(httpHeaders),List.class);
+		return cars.getBody();
 	}
 	
 	public List<Bike> getBikes(int userId){
-		List<Bike> bikes = resTemplate.getForObject("http://bike-service/bike/byuser/"+userId,List.class);
-		return bikes;
+		Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer" + jwt.getTokenValue());
+		
+		ResponseEntity<List> bikes = resTemplate.exchange("http://bike-service/bike/byuser/"+userId,HttpMethod.GET,new HttpEntity<>(httpHeaders),List.class);
+		return bikes.getBody();
 	}
 	public Car saveCar(int userId,Car car) {
 		car.setUserId(userId);
