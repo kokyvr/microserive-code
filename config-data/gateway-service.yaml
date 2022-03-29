@@ -9,6 +9,7 @@ eureka:
   instance:
     hostanme: localhost
 
+
 spring:
   cloud:
     gateway:
@@ -17,14 +18,14 @@ spring:
            enabled: true
        routes:
          - id: user-service
-           url: lb://user-service
+           uri: lb://user-service
            predicates:
              - Path=/user/**
          - id: car-service
-           url: lb://car-service
+           uri: lb://car-service
            predicates:
              - Path=/car/**       
          - id: bike-service
-           url: lb://bike-service
+           uri: lb://bike-service
            predicates:
              - Path=/bike/**
