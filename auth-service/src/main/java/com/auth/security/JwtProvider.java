@@ -7,9 +7,11 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.auth.dto.RequestDto;
 import com.auth.entity.AuthUser;
 
 import io.jsonwebtoken.Jwts;
@@ -20,6 +22,9 @@ public class JwtProvider {
 
 	@Value("${jwt.secret}")
 	private String secret;
+	
+	@Autowired
+	private RouteValidator routeValidator;
 
 	
 	@PostConstruct
@@ -32,6 +37,7 @@ public class JwtProvider {
 		
 		claims = Jwts.claims().setSubject(authUser.getUsername());
 		claims.put("id",authUser.getId());
+		claims.put("role",authUser.getRole());
 		Date now = new Date();
 		Date exp = new Date(now.getTime() + 3600000);
 		
@@ -41,14 +47,21 @@ public class JwtProvider {
 				.signWith(SignatureAlgorithm.HS256,this.secret).compact();
  	}
 	
-	public boolean validate(String token) {
+	public boolean validate(String token,RequestDto dto) {
 		try {
 			Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
-			return true;
+			
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;
 		}
+		if(!isAdmin(token) && routeValidator.isAdminPath(dto)) {
+			return false;
+		}
+		
+		return true;
+		
 	}
 	public String getUserNameFromToken(String token) {
 		try {
@@ -56,5 +69,9 @@ public class JwtProvider {
 		} catch (Exception e) {
 			return "bad token";
 		}
+	}
+	
+	private boolean isAdmin(String token) {
+		return Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody().get("role").equals("admin");
 	}
 }

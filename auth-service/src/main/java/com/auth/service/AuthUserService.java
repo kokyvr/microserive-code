@@ -7,6 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.auth.dto.AuthUserDto;
+import com.auth.dto.NewUserDto;
+import com.auth.dto.RequestDto;
 import com.auth.dto.TokenDto;
 import com.auth.entity.AuthUser;
 import com.auth.repository.AuthUserRepository;
@@ -24,13 +26,13 @@ public class AuthUserService {
 	@Autowired
 	private JwtProvider jwtProvider;
 	
-	public AuthUser save(AuthUserDto dto) {
+	public AuthUser save(NewUserDto dto) {
 		Optional<AuthUser> user = authRepository.findByUsername(dto.getUsername());
 		if(user.isPresent()) {
 			return null;
 		}
 		String password = passwordEncoder.encode(dto.getPassword());
-		AuthUser authUser = AuthUser.builder().username(dto.getUsername()).password(password) .build();
+		AuthUser authUser = AuthUser.builder().username(dto.getUsername()).password(password).role(dto.getRole()) .build();
 		
 		return authRepository.save(authUser);
 	}
@@ -47,8 +49,8 @@ public class AuthUserService {
 		
 	}
 	
-	public TokenDto validate(String token) {
-		if(!jwtProvider.validate(token))
+	public TokenDto validate(String token,RequestDto dto) {
+		if(!jwtProvider.validate(token,dto))
 			return null;
 		String username = jwtProvider.getUserNameFromToken(token);
 		if(!authRepository.findByUsername(username).isPresent())

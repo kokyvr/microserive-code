@@ -19,3 +19,17 @@ spring:
     
 jwt:
   secret: secret
+  
+admin-paths:
+ paths:
+  -
+    uri: "/user"
+    method: "POST"
+  
+  - 
+    uri: "/user/savecar/{1}[1-9]+[0-9]*"
+    post: "POST"
+  
+  - 
+    uri: "/user/savebike/{1}[1-9]+[0-9]*"
+    post: "POST"
