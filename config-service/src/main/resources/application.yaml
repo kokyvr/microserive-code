@@ -6,7 +6,7 @@ spring:
     config:
       server:
         git:
-          default-label: main
+          default-label: jwt
           uri: https://github.com/kokyvr/microserive-code
           search-paths:
           - config-data
