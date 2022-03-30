@@ -51,7 +51,7 @@ public class UserService {
 	public List<Car> getCars(int userId){
 		Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", "Bearer" + jwt.getTokenValue());
+		httpHeaders.add("Authorization", "Bearer " + jwt.getTokenValue());
 		ResponseEntity<List> cars = resTemplate.exchange("http://car-service/car/byuser/"+userId,HttpMethod.GET,new HttpEntity<>(httpHeaders),List.class);
 		return cars.getBody();
 	}
@@ -59,7 +59,7 @@ public class UserService {
 	public List<Bike> getBikes(int userId){
 		Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", "Bearer" + jwt.getTokenValue());
+		httpHeaders.add("Authorization", "Bearer " + jwt.getTokenValue());
 		
 		ResponseEntity<List> bikes = resTemplate.exchange("http://bike-service/bike/byuser/"+userId,HttpMethod.GET,new HttpEntity<>(httpHeaders),List.class);
 		return bikes.getBody();

@@ -16,7 +16,7 @@ public class FeignInterceptor implements RequestInterceptor{
 		// TODO Auto-generated method stub
 		Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", "Bearer" + jwt.getTokenValue());
+		httpHeaders.add("Authorization", "Bearer " + jwt.getTokenValue());
 	}
 
 }
