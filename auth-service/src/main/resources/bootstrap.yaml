@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: auth-service
+  cloud:
+    config:
+      enabled: true
+      uri:
+      - http://localhost:8081
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/luigicode_microservices
+    username: root
+    password: mysql
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    
+    
+jwt:
+  secret: secret
