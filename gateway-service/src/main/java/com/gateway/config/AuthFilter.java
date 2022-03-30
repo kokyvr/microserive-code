@@ -27,7 +27,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config>{
 	public GatewayFilter apply(Config config) {
 		// TODO Auto-generated method stub
 		return (((exchange,chain)->{
-			if(exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION))
+			if(!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION))
 				return onError(exchange,HttpStatus.BAD_REQUEST);
 			String tokenHeader =exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
 			String [] chunks = tokenHeader.split(" ");
